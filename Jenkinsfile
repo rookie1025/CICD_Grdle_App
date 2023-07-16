@@ -4,7 +4,6 @@ pipeline{
         stage("Sonar quality check"){
             agent {
                 docker {
-                    sh 'sudo chmode 777 /var/run/docker.sock'
                     image 'openjdk:11'
                 }
             }
