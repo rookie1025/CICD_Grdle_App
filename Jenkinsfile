@@ -39,7 +39,7 @@ pipeline{
 
                 script{
 
-                    withCredentials([string(credentialsId: 'docker_pass', variable: 'DOCKER_PASS')]) {
+                    timeout(5) { withCredentials([string(credentialsId: 'docker_pass', variable: 'DOCKER_PASS')]) {
 
                         sh  '''
                             docker build -t 13.126.113.51:8083/springapp:${VERSION} .
@@ -47,7 +47,7 @@ pipeline{
                             docker push 13.126.113.51:8083/springapp:${VERSION}
                             docker rmi 13.126.113.51:8083/springapp:${VERSION}
                         '''
-                    }
+                    }}
                 }
             }
         }
