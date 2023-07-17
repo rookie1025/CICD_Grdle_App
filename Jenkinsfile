@@ -37,9 +37,7 @@ pipeline{
 
             steps{
 
-                script{
-
-                    timeout(5) { withCredentials([string(credentialsId: 'docker_pass', variable: 'DOCKER_PASS')]) {
+                script{ 
 
                         sh  '''
                             docker build -t 172.31.34.167:8083/springapp:${VERSION} .
@@ -47,7 +45,7 @@ pipeline{
                             docker push 172.31.34.167:8083/springapp:${VERSION}
                             docker rmi 172.31.34.167:8083/springapp:${VERSION}
                         '''
-                    }}
+                    }
                 }
             }
         }
