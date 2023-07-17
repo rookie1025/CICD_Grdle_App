@@ -43,7 +43,7 @@ pipeline{
 
                         sh  '''
                             docker build -t 13.126.113.51:8083/springapp:${VERSION} .
-                            echo "$DOCKER_PASS" | docker login -u admin --password-stdin 172.31.34.167:8083
+                            echo "$DOCKER_PASS" | docker login -u admin -p 1234 172.31.34.167:8083
                             docker push 13.126.113.51:8083/springapp:${VERSION}
                             docker rmi 13.126.113.51:8083/springapp:${VERSION}
                         '''
