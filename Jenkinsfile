@@ -59,7 +59,7 @@ pipeline{
                     dir('kubernetes/') {
                     withCredentials([string(credentialsId: 'docker_pass', variable: 'DOCKER_PASS')]) {
                         sh  '''
-                             helmversion=$( helm show chart myhapp | grep version | cut -d: -f 2 | tr -d ' ')
+                             helmversion=$( helm show chart myapp | grep version | cut -d: -f 2 | tr -d ' ')
                              tar -czvf myapp-${helmversion}.tgz myapp/
                              curl -u admin:$DOCKER_PASS http://172.31.34.167:8081/repository/helm-hosted/ --upload-file myapp-${helmversion}.tgz -v
                         ''' 
