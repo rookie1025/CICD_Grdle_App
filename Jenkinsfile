@@ -56,13 +56,13 @@ pipeline{
 
                 script{
                     
-                    withCredentials([string(credentialsId: 'docker_pass', variable: 'DOCKER_PASS')]) {
+                    withCredentials([string(credentialsId: 'NEXUS_PASS', variable: 'nexus_pass')]) {
                     dir('kubernetes/') {
                         sh  '''
                              
                              helmversion=$( helm show chart myapp | grep version | cut -d: -f 2 | tr -d ' ')
                              tar -czvf myapp-${helmversion}.tgz myapp/
-                             curl -u admin:$DOCKER_PASS http://172.31.34.167:8081/repository/helm-hosted/ --upload-file myapp-${helmversion}.tgz -v
+                             curl -u admin:$nexus_pass http://172.31.34.167:8081/repository/helm-hosted/ --upload-file myapp-${helmversion}.tgz -v
                         ''' 
                     }
                     }
