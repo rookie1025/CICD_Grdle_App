@@ -38,29 +38,34 @@ pipeline{
             steps{
 
                 script{ 
-
+                        withCredentials([string(credentialsId: 'docker_pass', variable: 'DOCKER_PASS')]) {
                         sh  '''
                             docker build -t 172.31.34.167:8083/springapp:${VERSION} .
                             echo "$DOCKER_PASS" | docker login -u admin -p 1234 172.31.34.167:8083
                             docker push 172.31.34.167:8083/springapp:${VERSION}
                             docker rmi 172.31.34.167:8083/springapp:${VERSION}
                         '''
+                     }    
                 }
             }
         }
 
-        stage("identify misconfig using datree"){
+        stage("upload helm charts to repo"){
 
             steps{
 
                 script{
-
+                    
                     dir('kubernetes/') {
-                        
-                        sh '''
-                            helm datree test myapp/
-                        '''
-                    }               
+                    withCredentials([string(credentialsId: 'docker_pass', variable: 'DOCKER_PASS')]) {
+                        sh  '''
+                             helmversion=$( helm show chart myhapp | grep version | cut -d: -f 2 | tr -d ' ')
+                             tar -czvf myapp-${helmversion}.tgz myapp/
+                             curl -u admin:$DOCKER_PASS http://172.31.34.167:8081/repository/helm-hosted/ --upload-file myapp-${helmversion}.tgz -v
+                        ''' 
+                    }
+                    }
+                            
                 }
             }
         }
